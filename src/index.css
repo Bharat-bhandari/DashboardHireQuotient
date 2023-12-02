@@ -1,0 +1,130 @@
+/* src/index.css */
+
+/* Reset some styles to provide consistent rendering across different browsers */
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ul,
+ol,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+/* Set the default font family and color for the body */
+body {
+  line-height: 1.5;
+  font-family: sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+    sans-serif;
+  color: #000;
+}
+
+/* Add some padding and a background color to the root element */
+html {
+  box-sizing: border-box;
+}
+
+/* Apply a border box model to all elements */
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+/* Set the default font size and line height for headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+/* Style the links to provide visual feedback */
+a {
+  color: #007bff;
+  text-decoration: none;
+  background-color: transparent;
+}
+
+/* Style the focus state of links for accessibility */
+a:focus {
+  outline: thin dotted;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+
+/* Add some styles for the root element of the app */
+#root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Apply some styles to images */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Apply some styles for code elements */
+code {
+  font-size: 0.875em;
+  color: #e83e8c;
+  word-wrap: break-word;
+}
+
+/* Add some styles for pre elements */
+pre {
+  display: block;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  overflow: auto;
+  font-size: 87.5%;
+  color: #212529;
+}
+
+/* Style the blockquote element */
+blockquote {
+  margin: 0 0 1rem;
+}
+
+/* Style the table element */
+table {
+  width: 100%;
+  margin-bottom: 1rem;
+  border-collapse: collapse;
+}
+
+/* Style the th and td elements within tables */
+th,
+td {
+  padding: 0.75rem;
+  vertical-align: top;
+  border-top: 1px solid #dee2e6;
+}
+
+/* Style the th elements within tables */
+th {
+  text-align: inherit;
+  text-align: -webkit-match-parent;
+}
+
+/* Style the table with light background color */
+.table {
+  width: 100%;
+  margin-bottom: 1rem;
+  background-color: #fff;
+  color: #212529;
+}

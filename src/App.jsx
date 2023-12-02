@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import Nav from "./assets/components/Nav";
+import UserTable from "./assets/components/UserTable";
 
 const App = () => {
   const [users, setUsers] = useState([]);
@@ -11,7 +13,7 @@ const App = () => {
         );
 
         const data = await response.json();
-        console.log(data);
+        setUsers(data);
       } catch (error) {
         console.log("Error", error);
       }
@@ -19,7 +21,12 @@ const App = () => {
     fetchData();
   }, []);
 
-  return <div>App</div>;
+  return (
+    <>
+      <Nav />
+      <UserTable user={users} />
+    </>
+  );
 };
 
 export default App;

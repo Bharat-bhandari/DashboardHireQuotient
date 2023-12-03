@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import Nav from "./assets/components/Nav";
-import UserTable from "./assets/components/UserTable";
+import React, { useEffect, useMemo, useState } from "react";
+import Nav from "./components/Nav";
+import UserTable from "./components/UserTable";
 
 const App = () => {
   const [users, setUsers] = useState([]);
@@ -21,10 +21,12 @@ const App = () => {
     fetchData();
   }, []);
 
+  const data = useMemo(() => users, [users]);
+
   return (
     <>
       <Nav />
-      <UserTable user={users} />
+      <UserTable data={data} />
     </>
   );
 };

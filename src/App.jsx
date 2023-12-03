@@ -36,15 +36,15 @@ export default App;
 // Task to be completed
 // 1- completed
 // 2- completed
-// 3-
+// 3- completed
 // 4- half
 // 5-
 // 6-
 // 7- completed
 // 8-
-// 9-
+// 9- completed
 // 10- half
-// 11-
+// 11- completed
 // 12- completed
 // 13-
 // 14-

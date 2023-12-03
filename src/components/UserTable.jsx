@@ -84,10 +84,6 @@ const UserTable = ({ data }) => {
         ),
       },
       {
-        header: "ID",
-        accessorKey: "id",
-      },
-      {
         header: "Name",
         accessorKey: "name",
       },

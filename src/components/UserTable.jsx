@@ -24,7 +24,7 @@ const UserTable = ({ data }) => {
 
       const onBlur = () => {
         table.options.meta?.updateData(index, id, value);
-        setEditableRowIndex(null); // Disable editing after saving
+        setEditableRowIndex(null);
       };
 
       return isEditable ? (
@@ -41,6 +41,10 @@ const UserTable = ({ data }) => {
 
   const columns = [
     {
+      header: "ID",
+      accessorKey: "id",
+    },
+    {
       header: "Name",
       accessorKey: "name",
     },
@@ -55,9 +59,12 @@ const UserTable = ({ data }) => {
     {
       header: "Actions",
       cell: ({ row }) => (
-        <button onClick={() => handleEdit(row)}>
-          {editableRowIndex === row.index ? "Save" : "Edit"}
-        </button>
+        <>
+          <button onClick={() => handleEdit(row)}>
+            {editableRowIndex === row.index ? "Save" : "Edit"}
+          </button>
+          <button onClick={() => handleDelete(row)}>Delete</button>
+        </>
       ),
     },
   ];
@@ -69,6 +76,18 @@ const UserTable = ({ data }) => {
     } else {
       // Edit action
       setEditableRowIndex(row.index);
+    }
+  };
+
+  const handleDelete = (row) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this row?"
+    );
+    if (confirmDelete) {
+      setTableData((oldData) =>
+        oldData.filter((_, index) => index !== row.index)
+      );
+      // You may want to make an API call or perform other actions for actual deletion.
     }
   };
 

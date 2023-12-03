@@ -5,22 +5,41 @@ import {
   getPaginationRowModel,
   getFilteredRowModel,
 } from "@tanstack/react-table";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const UserTable = ({ data }) => {
-  //   {
-  //     "id": "1",
-  //     "name": "Aaron Miles",
-  //     "email": "aaron@mailinator.com",
-  //     "role": "member"
-  // }
+  const [tableData, setTableData] = useState(data);
+  const [filtering, setFiltering] = useState("");
+  const [editableRowIndex, setEditableRowIndex] = useState(null);
 
-  /** @type import('@tanstack/react-table').ColumnDef<any> */
-  const columns = [
-    {
-      header: "ID",
-      accessorKey: "id",
+  useEffect(() => {
+    setTableData(data);
+  }, [data]);
+
+  const defaultColumn = {
+    cell: ({ getValue, row: { index }, column: { id }, table }) => {
+      const isEditable = editableRowIndex === index;
+      const initialValue = getValue();
+      const [value, setValue] = useState(initialValue);
+
+      const onBlur = () => {
+        table.options.meta?.updateData(index, id, value);
+        setEditableRowIndex(null); // Disable editing after saving
+      };
+
+      return isEditable ? (
+        <input
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          onBlur={onBlur}
+        />
+      ) : (
+        initialValue
+      );
     },
+  };
+
+  const columns = [
     {
       header: "Name",
       accessorKey: "name",
@@ -33,13 +52,30 @@ const UserTable = ({ data }) => {
       header: "Role",
       accessorKey: "role",
     },
+    {
+      header: "Actions",
+      cell: ({ row }) => (
+        <button onClick={() => handleEdit(row)}>
+          {editableRowIndex === row.index ? "Save" : "Edit"}
+        </button>
+      ),
+    },
   ];
 
-  const [filtering, setFiltering] = useState("");
+  const handleEdit = (row) => {
+    if (editableRowIndex === row.index) {
+      // Save action
+      setEditableRowIndex(null);
+    } else {
+      // Edit action
+      setEditableRowIndex(row.index);
+    }
+  };
 
   const table = useReactTable({
-    data,
+    data: tableData,
     columns,
+    defaultColumn,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -47,15 +83,23 @@ const UserTable = ({ data }) => {
       globalFilter: filtering,
     },
     onGlobalFilterChange: setFiltering,
+    meta: {
+      updateData: (rowIndex, columnId, value) => {
+        setTableData((oldData) =>
+          oldData.map((row, index) =>
+            index === rowIndex ? { ...row, [columnId]: value } : row
+          )
+        );
+      },
+    },
   });
-
   return (
     <>
       <input
         type="text"
         value={filtering}
         onChange={(e) => setFiltering(e.target.value)}
-        placeholder="Search"
+        placeholder="search"
       />
       <table>
         <thead>

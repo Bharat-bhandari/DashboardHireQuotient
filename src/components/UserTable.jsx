@@ -29,21 +29,6 @@ const UserTable = ({ data }) => {
     setTableData(data);
   }, [data]);
 
-  const handleSelectAll = () => {
-    const allRowIndices = tableData.map((_, index) => index);
-    setSelectedRows((prev) =>
-      prev.length === allRowIndices.length ? [] : allRowIndices
-    );
-  };
-
-  // const handleSelectAllOnPage = () => {
-  //   const currentPageRows = table.page;
-  //   const allRowIndices = currentPageRows.map((row) => row.index);
-  //   setSelectedRows((prev) =>
-  //     prev.length === allRowIndices.length ? [] : allRowIndices
-  //   );
-  // };
-
   const handleSelect = (row) => {
     setSelectedRows((prev) =>
       prev.includes(row.index)
@@ -57,15 +42,10 @@ const UserTable = ({ data }) => {
   };
 
   const handleDelete = (row) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this row?"
+    setTableData((oldData) =>
+      oldData.filter((_, index) => index !== row.index)
     );
-    if (confirmDelete) {
-      setTableData((oldData) =>
-        oldData.filter((_, index) => index !== row.index)
-      );
-      setSelectedRows((prev) => prev.filter((index) => index !== row.index));
-    }
+    setSelectedRows((prev) => prev.filter((index) => index !== row.index));
   };
 
   const handleDeleteSelected = () => {

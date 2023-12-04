@@ -25,15 +25,20 @@ section {
   width: 100%;
   border: 1px solid rgb(229, 231, 235);
 }
+/* UserTable.css */
 
 .deleteAll {
   background-color: #fa8072;
   height: 2rem;
   width: 2rem;
   border-radius: 0.2rem;
-
   margin-top: 0.4rem;
   cursor: pointer;
+  transition: background-color 0.3s ease; /* Smooth transition for background color */
+}
+
+.deleteAll:hover {
+  background-color: #fa513f;
 }
 
 table {
@@ -56,8 +61,8 @@ tr:hover {
   background-color: #f5f5f5;
 }
 
-.highlight {
-  background-color: #a0a0a0; /* Change this to your desired highlight color */
+.selectedRow {
+  background-color: #dcdcdc;
 }
 
 .actions {
@@ -65,6 +70,89 @@ tr:hover {
   gap: 0.8rem;
 }
 
-.icons {
-  font-size: 24px;
+.actionsBtn {
+  height: 2rem;
+  width: 2rem;
+  cursor: pointer;
+}
+
+input[type="checkbox"] {
+  align-items: flex-start;
+  appearance: button;
+  background-color: rgb(22, 163, 74);
+  border: 1px solid rgb(22, 163, 74);
+  border-radius: 0.8px;
+  box-sizing: border-box;
+  color: rgb(255, 241, 242);
+  cursor: pointer;
+  display: inline-block;
+  flex-shrink: 0;
+  font-size: 14px;
+  height: 16px;
+  line-height: 20px;
+  margin: 0;
+  padding: 0;
+  width: 16px;
+}
+
+input[type="checkbox"]:checked {
+  background-color: rgb(22, 163, 74);
+}
+
+.editInput {
+  padding: 8px;
+  border: 1px solid #4caf50; /* Green border for edit mode */
+  border-radius: 4px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.pagination button {
+  padding: 0.5rem 1rem;
+  background-color: #3498db;
+  color: #fff;
+  border: 1px solid #3498db;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.pagination button:hover {
+  background-color: #2980b9;
+}
+
+.pagination button:disabled {
+  background-color: #bdc3c7;
+  border: 1px solid #bdc3c7;
+  cursor: not-allowed;
+}
+
+.pagination p {
+  margin: 0;
+  padding: 0.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Additional styling for First and Last Page buttons */
+.pagination button:first-child,
+.pagination button:last-child {
+  background-color: #2ecc71;
+  border: 1px solid #2ecc71;
+}
+
+.pagination button:first-child:hover,
+.pagination button:last-child:hover {
+  background-color: #27ae60;
 }

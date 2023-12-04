@@ -32,17 +32,17 @@ const App = () => {
 export default App;
 
 // Task to be completed
-// 1- completed
-// 2- completed
-// 3- completed
-// 4- half
-// 5-
-// 6-
-// 7- completed
+// 1- completed=
+// 2- completed=
+// 3- completed=
+// 4- half=
+// 5- completed=
+// 6- completed=
+// 7- completed=
 // 8-
-// 9- completed
+// 9- completed=
 // 10- half
-// 11- completed
-// 12- completed
-// 13-
-// 14-
+// 11- completed=
+// 12- completed=
+// 13- completed=
+// 14- completed=

@@ -11,29 +11,45 @@ import {
 
 import { MdDeleteOutline } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
-import { IoSaveOutline } from "react-icons/io5";
+
+import { FaCheck } from "react-icons/fa6";
 
 const UserTable = ({ data }) => {
   const [tableData, setTableData] = useState(data);
   const [filtering, setFiltering] = useState("");
   const [editableRowIndex, setEditableRowIndex] = useState(null);
   const [selectedRows, setSelectedRows] = useState([]);
-  const [goToPage, setGoToPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [isAllChecked, setIsAllChecked] = useState(false);
+  const [editedValues, setEditedValues] = useState({});
 
   const handleSelectAllOnPage = () => {
-    // Getting error here
+    setIsAllChecked(!isAllChecked);
 
-    const currentPageRows = table.page || [];
-    const allRowIndices = currentPageRows.map((row) => row.index);
-
-    setSelectedRows((prev) =>
-      prev.length === allRowIndices.length ? [] : allRowIndices
-    );
+    if (!isAllChecked) {
+      const next10Rows = Array.from(
+        { length: 10 },
+        (_, index) => (currentPage - 1) * 10 + index
+      );
+      setSelectedRows(next10Rows);
+    } else {
+      setSelectedRows([]);
+    }
   };
 
   useEffect(() => {
     setTableData(data);
   }, [data]);
+
+  useEffect(() => {
+    setTotalPages(Math.ceil(tableData.length / 10));
+  }, [tableData]);
+
+  useEffect(() => {
+    setIsAllChecked(false);
+    setSelectedRows([]);
+  }, [currentPage]);
 
   const handleSelect = (row) => {
     setSelectedRows((prev) =>
@@ -44,8 +60,29 @@ const UserTable = ({ data }) => {
   };
 
   const handleEdit = (row) => {
-    setEditableRowIndex((prev) => (prev === row.index ? null : row.index));
+    if (editableRowIndex === row.index) {
+      // Stop editing and save changes
+      setEditableRowIndex(null);
+      setTableData((oldData) =>
+        oldData.map((rowData, index) =>
+          index === row.index ? { ...rowData, ...editedValues } : rowData
+        )
+      );
+      setEditedValues({});
+    } else {
+      // Start editing
+      setEditableRowIndex(row.index);
+      // Initialize edited values with the previous values
+      setEditedValues({ ...row.values });
+    }
   };
+
+  useEffect(() => {
+    // When editableRowIndex changes, update editedValues with the previous values
+    if (editableRowIndex !== null) {
+      setEditedValues({ ...tableData[editableRowIndex] });
+    }
+  }, [editableRowIndex, tableData]);
 
   const handleDelete = (row) => {
     setTableData((oldData) =>
@@ -64,6 +101,7 @@ const UserTable = ({ data }) => {
       );
       setSelectedRows([]);
     }
+    setIsAllChecked(false);
   };
 
   const table = useReactTable({
@@ -75,10 +113,7 @@ const UserTable = ({ data }) => {
           <input
             type="checkbox"
             onChange={handleSelectAllOnPage}
-            checked={
-              selectedRows.length === (table.page?.length ?? 0) &&
-              selectedRows.length > 0
-            }
+            checked={isAllChecked}
           />
         ),
         cell: ({ row }) => (
@@ -106,14 +141,14 @@ const UserTable = ({ data }) => {
         cell: ({ row }) => (
           <>
             <div className="actions">
-              <button onClick={() => handleEdit(row)}>
+              <button className="actionsBtn" onClick={() => handleEdit(row)}>
                 {editableRowIndex === row.index ? (
-                  <IoSaveOutline style={{ fontSize: "24px" }} />
+                  <FaCheck className="icons" />
                 ) : (
                   <FiEdit />
                 )}
               </button>
-              <button onClick={() => handleDelete(row)}>
+              <button className="actionsBtn" onClick={() => handleDelete(row)}>
                 <MdDeleteOutline />
               </button>
             </div>
@@ -124,16 +159,16 @@ const UserTable = ({ data }) => {
     defaultColumn: {
       cell: ({ getValue, row: { index }, column: { id }, table }) => {
         const isEditable = editableRowIndex === index;
-        const initialValue = getValue();
+        const initialValue = isEditable ? editedValues[id] : getValue();
         const [value, setValue] = useState(initialValue);
 
         const onBlur = () => {
-          table.options.meta?.updateData(index, id, value);
-          setEditableRowIndex(null);
+          setEditedValues((prev) => ({ ...prev, [id]: value }));
         };
 
         return isEditable ? (
           <input
+            className="editInput"
             value={value}
             onChange={(e) => setValue(e.target.value)}
             onBlur={onBlur}
@@ -171,7 +206,9 @@ const UserTable = ({ data }) => {
               className="searchBar"
               type="text"
               value={filtering}
-              onChange={(e) => setFiltering(e.target.value)}
+              onChange={(e) => {
+                return setFiltering(e.target.value);
+              }}
               placeholder="search"
             />
             <div>
@@ -198,7 +235,12 @@ const UserTable = ({ data }) => {
             </thead>
             <tbody>
               {table.getRowModel().rows.map((row) => (
-                <tr key={row.id}>
+                <tr
+                  key={row.id}
+                  className={
+                    selectedRows.includes(row.index) ? "selectedRow" : ""
+                  }
+                >
                   {row.getVisibleCells().map((cell) => (
                     <td key={cell.id}>
                       {flexRender(
@@ -211,41 +253,44 @@ const UserTable = ({ data }) => {
               ))}
             </tbody>
           </table>
-          <div>
-            <button onClick={() => table.setPageIndex(0)}>First Page</button>
+          <div className="pagination">
+            <button
+              onClick={() => {
+                setCurrentPage(1);
+                return table.setPageIndex(0);
+              }}
+            >
+              First Page
+            </button>
             <button
               disabled={!table.getCanPreviousPage()}
-              onClick={() => table.previousPage()}
+              onClick={() => {
+                setCurrentPage((prev) => prev - 1);
+                return table.previousPage();
+              }}
             >
               Previous Page
             </button>
+            <p>
+              Page {currentPage} of {totalPages}
+            </p>
             <button
               disabled={!table.getCanNextPage()}
-              onClick={() => table.nextPage()}
+              onClick={() => {
+                setCurrentPage((prev) => prev + 1);
+                return table.nextPage();
+              }}
             >
               Next Page
             </button>
             <button
-              onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+              onClick={() => {
+                setCurrentPage(Math.ceil(tableData.length / 10));
+                return table.setPageIndex(table.getPageCount() - 1);
+              }}
             >
               Last Page
             </button>
-          </div>
-          <div>
-            <span>Go to Page:</span>
-            <input
-              type="number"
-              value={goToPage}
-              min={1}
-              max={data.length / 10 + 1}
-              onChange={(e) => {
-                const page = parseInt(e.target.value, 10);
-                if (!isNaN(page) && page > 0 && page <= table.getPageCount()) {
-                  table.setPageIndex(page - 1);
-                }
-                setGoToPage(page);
-              }}
-            />
           </div>
         </div>
       </section>

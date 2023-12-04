@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from "react";
-import Nav from "./components/Nav";
 import UserTable from "./components/UserTable";
 
 const App = () => {
@@ -25,7 +24,6 @@ const App = () => {
 
   return (
     <>
-      <Nav />
       <UserTable data={data} />
     </>
   );

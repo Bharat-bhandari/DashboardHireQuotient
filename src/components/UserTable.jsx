@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import "./UserTable.css";
+
 import {
   useReactTable,
   getCoreRowModel,
@@ -6,6 +8,10 @@ import {
   getPaginationRowModel,
   getFilteredRowModel,
 } from "@tanstack/react-table";
+
+import { MdDeleteOutline } from "react-icons/md";
+import { FiEdit } from "react-icons/fi";
+import { IoSaveOutline } from "react-icons/io5";
 
 const UserTable = ({ data }) => {
   const [tableData, setTableData] = useState(data);
@@ -99,10 +105,18 @@ const UserTable = ({ data }) => {
         header: "Actions",
         cell: ({ row }) => (
           <>
-            <button onClick={() => handleEdit(row)}>
-              {editableRowIndex === row.index ? "Save" : "Edit"}
-            </button>
-            <button onClick={() => handleDelete(row)}>Delete</button>
+            <div className="actions">
+              <button onClick={() => handleEdit(row)}>
+                {editableRowIndex === row.index ? (
+                  <IoSaveOutline style={{ fontSize: "24px" }} />
+                ) : (
+                  <FiEdit />
+                )}
+              </button>
+              <button onClick={() => handleDelete(row)}>
+                <MdDeleteOutline />
+              </button>
+            </div>
           </>
         ),
       },
@@ -149,76 +163,92 @@ const UserTable = ({ data }) => {
 
   return (
     <>
-      <input
-        type="text"
-        value={filtering}
-        onChange={(e) => setFiltering(e.target.value)}
-        placeholder="search"
-      />
-      <div>
-        <button onClick={handleDeleteSelected}>Delete Selected</button>
-      </div>
-      <table>
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th key={header.id}>
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext()
-                  )}
-                </th>
+      <nav>HireQuotient Admin Dashboard Assignment</nav>
+      <section>
+        <div className="content">
+          <div className="search">
+            <input
+              className="searchBar"
+              type="text"
+              value={filtering}
+              onChange={(e) => setFiltering(e.target.value)}
+              placeholder="search"
+            />
+            <div>
+              <MdDeleteOutline
+                onClick={handleDeleteSelected}
+                className="deleteAll"
+              />
+            </div>
+          </div>
+          <table>
+            <thead>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <th key={header.id}>
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                    </th>
+                  ))}
+                </tr>
               ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
+            </thead>
+            <tbody>
+              {table.getRowModel().rows.map((row) => (
+                <tr key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <td key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </td>
+                  ))}
+                </tr>
               ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <div>
-        <button onClick={() => table.setPageIndex(0)}>First Page</button>
-        <button
-          disabled={!table.getCanPreviousPage()}
-          onClick={() => table.previousPage()}
-        >
-          Previous Page
-        </button>
-        <button
-          disabled={!table.getCanNextPage()}
-          onClick={() => table.nextPage()}
-        >
-          Next Page
-        </button>
-        <button onClick={() => table.setPageIndex(table.getPageCount() - 1)}>
-          Last Page
-        </button>
-      </div>
-      <div>
-        <span>Go to Page:</span>
-        <input
-          type="number"
-          value={goToPage}
-          min={1}
-          max={data.length / 10 + 1}
-          onChange={(e) => {
-            const page = parseInt(e.target.value, 10);
-            if (!isNaN(page) && page > 0 && page <= table.getPageCount()) {
-              table.setPageIndex(page - 1);
-            }
-            setGoToPage(page);
-          }}
-        />
-      </div>
+            </tbody>
+          </table>
+          <div>
+            <button onClick={() => table.setPageIndex(0)}>First Page</button>
+            <button
+              disabled={!table.getCanPreviousPage()}
+              onClick={() => table.previousPage()}
+            >
+              Previous Page
+            </button>
+            <button
+              disabled={!table.getCanNextPage()}
+              onClick={() => table.nextPage()}
+            >
+              Next Page
+            </button>
+            <button
+              onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+            >
+              Last Page
+            </button>
+          </div>
+          <div>
+            <span>Go to Page:</span>
+            <input
+              type="number"
+              value={goToPage}
+              min={1}
+              max={data.length / 10 + 1}
+              onChange={(e) => {
+                const page = parseInt(e.target.value, 10);
+                if (!isNaN(page) && page > 0 && page <= table.getPageCount()) {
+                  table.setPageIndex(page - 1);
+                }
+                setGoToPage(page);
+              }}
+            />
+          </div>
+        </div>
+      </section>
     </>
   );
 };

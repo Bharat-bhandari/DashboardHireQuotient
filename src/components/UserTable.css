@@ -25,7 +25,23 @@ section {
   width: 100%;
   border: 1px solid rgb(229, 231, 235);
 }
-/* UserTable.css */
+
+.searchExport {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.export {
+  background-color: rgb(12, 225, 90);
+  border-color: #27ae60;
+  color: white;
+
+  font-weight: 600;
+
+  width: 11rem;
+  border-radius: 0.2rem;
+  cursor: pointer;
+}
 
 .deleteAll {
   background-color: #fa8072;

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./UserTable.css";
+import * as XLSX from "xlsx";
 
 import {
   useReactTable,
@@ -11,7 +12,6 @@ import {
 
 import { MdDeleteOutline } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
-
 import { FaCheck } from "react-icons/fa6";
 
 const UserTable = ({ data }) => {
@@ -196,21 +196,35 @@ const UserTable = ({ data }) => {
     },
   });
 
+  const handleOnExport = () => {
+    var wb = XLSX.utils.book_new(),
+      ws = XLSX.utils.json_to_sheet(tableData);
+
+    XLSX.utils.book_append_sheet(wb, ws, "UserTable");
+
+    XLSX.writeFile(wb, "UserTable.xlsx");
+  };
+
   return (
     <>
       <nav>HireQuotient Admin Dashboard Assignment</nav>
       <section>
         <div className="content">
           <div className="search">
-            <input
-              className="searchBar"
-              type="text"
-              value={filtering}
-              onChange={(e) => {
-                return setFiltering(e.target.value);
-              }}
-              placeholder="search"
-            />
+            <div className="searchExport">
+              <input
+                className="searchBar"
+                type="text"
+                value={filtering}
+                onChange={(e) => {
+                  return setFiltering(e.target.value);
+                }}
+                placeholder="search"
+              />
+              <button className="export" onClick={handleOnExport}>
+                Export to Excel
+              </button>
+            </div>
             <div>
               <MdDeleteOutline
                 onClick={handleDeleteSelected}
